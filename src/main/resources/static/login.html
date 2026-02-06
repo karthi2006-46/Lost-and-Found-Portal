@@ -1,46 +1,100 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Login</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="d-flex justify-content-center align-items-center vh-100">
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>Lost & Found Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  </head>
 
-<div class="card p-4" style="width:350px">
-  <h4 class="text-center mb-3">Login</h4>
+  <body class="d-flex justify-content-center align-items-center vh-100 bg-light">
 
-  <form id="loginForm">
-    <input id="username" class="form-control mb-2" placeholder="Username" required>
-    <input id="password" type="password" class="form-control mb-3" placeholder="Password" required>
-    <button type="submit" class="btn btn-primary w-100">Login</button>
-  </form>
-</div>
+  <div class="card shadow-lg p-4" style="width:380px;border-radius:15px">
 
-<script>
-document.getElementById("loginForm").addEventListener("submit", async function(e) {
-  e.preventDefault();
+    <div class="text-center mb-3">
+      <h4 class="fw-bold">Lost & Found Portal</h4>
+      <small class="text-muted">Secure Login</small>
+    </div>
 
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
+    <!-- LOGIN FORM -->
+    <form id="loginForm">
+      <div class="input-group mb-2">
+        <span class="input-group-text"><i class="fa fa-user"></i></span>
+        <input id="username" class="form-control" placeholder="Username" required>
+      </div>
 
-  const res = await fetch("/api/auth/login", {
-    method: "POST",
-    headers: { "Content-Type":"application/json" },
-    body: JSON.stringify({ username, password })
-  });
+      <div class="input-group mb-3">
+        <span class="input-group-text"><i class="fa fa-lock"></i></span>
+        <input id="password" type="password" class="form-control" placeholder="Password" required>
+      </div>
 
-  if(!res.ok){
-    alert("Invalid username or password");
-    return;
+      <button class="btn btn-primary w-100 mb-2">Login</button>
+
+      <div class="text-center">
+        <small><a href="#" onclick="showRegister()">Create New Account</a></small>
+      </div>
+    </form>
+
+    <!-- REGISTER FORM -->
+    <form id="registerForm" style="display:none">
+      <input id="rname" class="form-control mb-2" placeholder="Full Name" required>
+      <input id="rusername" class="form-control mb-2" placeholder="Username" required>
+      <input id="remail" class="form-control mb-2" placeholder="Email" required>
+      <input id="rpassword" type="password" class="form-control mb-3" placeholder="Password" required>
+      <button class="btn btn-success w-100 mb-2">Register</button>
+      <div class="text-center">
+        <small><a href="#" onclick="showLogin()">Back to Login</a></small>
+      </div>
+    </form>
+
+  </div>
+
+  <script>
+  function showRegister(){
+    loginForm.style.display="none";
+    registerForm.style.display="block";
   }
 
-  const data = await res.json();
+  function showLogin(){
+    registerForm.style.display="none";
+    loginForm.style.display="block";
+  }
+
+  // LOGIN
+  loginForm.onsubmit = async (e)=>{
+    e.preventDefault();
+    let res = await fetch("/api/auth/login",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json"},
+      body: JSON.stringify({
+        username:username.value,
+        password:password.value
+      })
+    });
+    if(!res.ok){ alert("Invalid credentials"); return; }
+    let data = await res.json();
   localStorage.setItem("token", data.token);
+  localStorage.setItem("role", data.role);
+  localStorage.setItem("username", data.username);   // 👈 ADD THIS
 
-  alert("Login successful");
-  window.location.href="/post.html";
-});
-</script>
+    window.location = data.role==="ADMIN" ? "/admin-claims.html" : "/";
+  }
 
-</body>
-</html>
+  // REGISTER
+  registerForm.onsubmit = async (e)=>{
+  e.preventDefault();
+  let res = await fetch("/api/auth/register",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json"},
+    body: JSON.stringify({
+    fullName:rname.value,
+    username:rusername.value,
+    email:remail.value,
+    password:rpassword.value
+    })
+  });
+  if(res.ok){ alert("Account created! Login now"); showLogin(); }
+  else{ alert("Username or email already exists"); }
+  }
+  </script>
+  </body>
+  </html>

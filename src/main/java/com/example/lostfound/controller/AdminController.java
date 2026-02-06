@@ -7,6 +7,7 @@ import com.example.lostfound.repository.ClaimRepository;
 import com.example.lostfound.repository.ItemPostRepository;
 import com.example.lostfound.repository.UserRepository;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -14,6 +15,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin")
+@PreAuthorize("hasAuthority('ADMIN')")
+
 public class AdminController {
     private final ItemPostRepository itemRepo;
     private final ClaimRepository claimRepo;

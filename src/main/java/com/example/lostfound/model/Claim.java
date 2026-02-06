@@ -9,7 +9,9 @@ import java.time.Instant;
 @Table(name = "claims")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Claim {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(optional=false)
@@ -23,6 +25,7 @@ public class Claim {
 
     private String status; // PENDING, APPROVED, REJECTED
 
+    @Builder.Default
     private Instant createdAt = Instant.now();
 
     @ManyToOne

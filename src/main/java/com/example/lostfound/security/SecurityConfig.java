@@ -23,27 +23,33 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-@Bean
+
+   @Bean
 public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
     JwtAuthFilter jwtFilter = new JwtAuthFilter(jwtUtil);
 
     http.csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
+
+            // ✅ PUBLIC HTML
             .requestMatchers(
-                "/",
-                "/index.html",
-                "/item.html",
-                "/post.html",
-                "/login.html",
-                "/register.html",
-                "/static/**",
-                "/api/auth/**",
-                "/api/items",           // list
-                "/api/items/*",         // single item  👈 IMPORTANT
-                "/api/items/photo/**"   // image
+                "/", "/index.html",
+                "/login.html", "/register.html",
+                "/item.html", "/post.html",
+                "/my-claims.html",
+                "/admin-claims.html",   // ✅ ALLOW HTML
+                "/static/**"
             ).permitAll()
-            .requestMatchers(HttpMethod.POST, "/api/items").authenticated()
+
+            // ✅ PUBLIC APIs
+            .requestMatchers("/api/items/**", "/api/auth/**").permitAll()
+
+            // 🔐 ADMIN APIs ONLY
+            .requestMatchers("/api/claims/pending", "/api/claims/*/resolve")
+            .hasAuthority("ADMIN")
+
+            // 🔐 ALL OTHER APIs NEED LOGIN
             .anyRequest().authenticated()
         )
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

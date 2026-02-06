@@ -1,50 +1,181 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>College Lost & Found</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<title>Lost & Found Portal</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
+
 <body class="bg-light">
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <div class="container">
-    <a class="navbar-brand" href="/">Lost & Found</a>
-    <div>
-      <a href="/login.html" class="btn btn-outline-light btn-sm">Login</a>
-      <a href="/register.html" class="btn btn-outline-light btn-sm">Register</a>
-      <a href="/post.html" class="btn btn-outline-light btn-sm">Report</a>
-    </div>
-  </div>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+<div class="container">
+
+<a class="navbar-brand fw-bold">Lost & Found Portal</a>
+
+<div class="ms-auto d-flex align-items-center gap-2">
+
+  <a href="/" class="btn btn-light btn-sm rounded-pill px-3">
+    <i class="fa fa-home me-1"></i> Home
+  </a>
+
+  <a id="myClaimsBtn" href="/my-claims.html"
+     class="btn btn-warning btn-sm rounded-pill px-3 d-none">
+    <i class="fa fa-list me-1"></i> My Claims
+  </a>
+
+  <span class="badge bg-light text-dark rounded-pill px-3 py-2">
+    <i class="fa fa-user-circle me-1"></i>
+    <span id="user">Guest</span>
+  </span>
+
+  <button id="logoutBtn" onclick="logout()"
+          class="btn btn-danger btn-sm rounded-pill px-3 d-none">
+    <i class="fa fa-sign-out-alt me-1"></i> Logout
+  </button>
+
+  <a id="adminBtn" href="/admin-claims.html"
+     class="btn btn-dark btn-sm rounded-pill px-3 d-none">
+    <i class="fa fa-user-shield me-1"></i> Admin Panel
+  </a>
+
+</div>
+</div>
 </nav>
 
-<div class="container py-4">
-  <h2>Recent posts</h2>
-  <div id="items" class="row"></div>
-  
+<div class="container mt-4">
+
+<div class="row mb-3">
+  <div class="col-md-6">
+    <!-- Public can post FOUND item -->
+    <a href="/post.html" class="btn btn-success w-100">
+      <i class="fa fa-plus"></i> Post Found Item
+    </a>
+  </div>
+
+  <div class="col-md-6">
+    <!-- Lost item needs login -->
+    <button onclick="reportLost()" class="btn btn-danger w-100">
+      <i class="fa fa-exclamation-triangle"></i> Report Lost Item
+    </button>
+  </div>
 </div>
+
+<div class="row" id="items"></div>
+</div>
+
 <script>
-const itemsEl = document.getElementById('items');
+/* =====================
+   USER / ROLE HANDLING
+   ===================== */
+window.onload = ()=>{
+ let u = localStorage.getItem("username");
+ let role = localStorage.getItem("role");
 
-fetch('/api/items')
-.then(res => res.json())
-.then(data => {
-  itemsEl.innerHTML = data.map(i => `
-    <div class="col-md-4 mb-3">
-      <div class="card shadow-sm">
-        ${i.photo ? `<img src="/api/items/photo/${i.id}" class="card-img-top" height="200">` : ''}
-        <div class="card-body">
-          <h5>${i.title} <small class="text-muted">${i.lost ? 'Lost' : 'Found'}</small></h5>
-          <p>${i.description || ''}</p>
-          <p><b>Location:</b> ${i.location || '-'}</p>
-          <a href="/item.html?id=${i.id}" class="btn btn-primary btn-sm">View</a>
-        </div>
-      </div>
+ if(u){
+   document.getElementById("user").innerText = u;
+   document.getElementById("logoutBtn").classList.remove("d-none");
+   document.getElementById("myClaimsBtn").classList.remove("d-none");
+
+   if(role === "ADMIN"){
+     document.getElementById("adminBtn").classList.remove("d-none");
+   }
+ }
+};
+
+/* =====================
+   LOAD ITEMS (PUBLIC)
+   ===================== */
+async function load(){
+ let res = await fetch("/api/items");
+ let data = await res.json();
+ let html="";
+
+ data.forEach(i=>{
+ html+=`
+ <div class="col-md-4 mb-3">
+  <div class="card shadow-sm">
+    ${i.photo ? `<img src="/api/items/photo/${i.id}" height="200" class="card-img-top">` : ""}
+    <div class="card-body">
+      <h5>${i.title}</h5>
+
+      <span class="badge bg-${i.lost ? 'danger' : 'success'}">
+        ${i.lost ? 'LOST' : 'FOUND'}
+      </span>
+
+      <p class="mt-2">${i.location ?? ''}</p>
+      <p><b>Date:</b> ${i.dateEvent}</p>
+      <p>Status: <b>${i.status}</b></p>
+
+      <a href="/item.html?id=${i.id}"
+         class="btn btn-outline-primary w-100 mb-2">
+        View Details
+      </a>
+
+      ${
+        !i.lost
+        ? (
+            localStorage.getItem("token")
+            ? `<button onclick="claim(${i.id})"
+                class="btn btn-warning w-100">Claim</button>`
+            : `<a href="/login.html"
+                class="btn btn-outline-warning w-100">
+                Login to Claim
+              </a>`
+          )
+        : `<small class="text-muted">Waiting for finder...</small>`
+      }
     </div>
-  `).join('');
-});
-</script>
+  </div>
+ </div>`;
+ });
 
+ items.innerHTML = html;
+}
+
+/* =====================
+   CLAIM ITEM (LOGIN)
+   ===================== */
+async function claim(id){
+ if(!localStorage.getItem("token")){
+   alert("Login required to submit claim");
+   window.location="/login.html";
+   return;
+ }
+
+ let reason = prompt("Enter claim reason:");
+ if(!reason) return;
+
+ await fetch("/api/claims/"+id+"?reason="+reason,{
+   method:"POST",
+   headers:{ "Authorization":"Bearer "+localStorage.getItem("token") }
+ });
+
+ alert("Claim submitted successfully");
+}
+
+/* =====================
+   REPORT LOST ITEM
+   ===================== */
+function reportLost(){
+ if(!localStorage.getItem("token")){
+   alert("Login required to report lost item");
+   window.location="/login.html";
+ } else {
+   window.location="/post.html?lost=true";
+ }
+}
+
+/* =====================
+   LOGOUT
+   ===================== */
+function logout(){
+ localStorage.clear();
+ window.location="/login.html";
+}
+
+load();
+</script>
 
 </body>
 </html>

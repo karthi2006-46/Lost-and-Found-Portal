@@ -25,19 +25,28 @@ public class ItemController {
         this.userRepo = userRepo;
     }
 
-    // 🔍 List items (Home page)
+    // 🔍 PUBLIC SEARCH
     @GetMapping
-    public List<ItemPost> search(@RequestParam(required=false) String q,
-                                 @RequestParam(required=false) String location,
-                                 @RequestParam(required=false) String category,
-                                 @RequestParam(required=false) Boolean isLost,
-                                 @RequestParam(defaultValue="0") int page,
-                                 @RequestParam(defaultValue="20") int size) {
+    public List<ItemPost> search(
+            @RequestParam(required=false) String q,
+            @RequestParam(required=false) String location,
+            @RequestParam(required=false) String category,
+            @RequestParam(required=false) Boolean isLost,
+            @RequestParam(defaultValue="0") int page,
+            @RequestParam(defaultValue="20") int size) {
 
         return itemRepo.search(q, location, category, isLost, PageRequest.of(page,size));
     }
 
-    // 🖼️ View Photo
+    // 👁️ PUBLIC VIEW SINGLE ITEM  ✅ FIX
+    @GetMapping("/{id}")
+    public ResponseEntity<ItemPost> getItemById(@PathVariable Long id) {
+        return itemRepo.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // 🖼️ PUBLIC PHOTO VIEW
     @GetMapping("/photo/{id}")
     public ResponseEntity<byte[]> photo(@PathVariable Long id) {
         return itemRepo.findById(id)
@@ -48,42 +57,45 @@ public class ItemController {
             .orElse(ResponseEntity.notFound().build());
     }
 
-    // 👁️ View Single Item (FIXED)
-    @GetMapping("/{id}")
-    public ResponseEntity<ItemPost> getById(@PathVariable Long id) {
-        return itemRepo.findById(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
-    }
-
-    // ➕ Report Lost / Found Item
+    // ➕ POST LOST / FOUND ITEM
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<?> create(@RequestParam String title,
-                                    @RequestParam(required=false) String description,
-                                    @RequestParam(required=false) String location,
-                                    @RequestParam(required=false) String dateEvent,
-                                    @RequestParam(required=false) String category,
-                                    @RequestParam boolean lost,
-                                    @RequestParam(required=false) MultipartFile photo,
-                                    Authentication authentication) throws Exception {
+    public ResponseEntity<?> create(
+            @RequestParam String title,
+            @RequestParam(required=false) String description,
+            @RequestParam(required=false) String location,
+            @RequestParam String dateEvent,
+            @RequestParam String category,
+            @RequestParam String mobile,
+            @RequestParam boolean lost,
+            @RequestParam(required=false) MultipartFile photo,
+            Authentication auth) throws Exception {
 
-        String username = (String) authentication.getPrincipal();
-        User user = userRepo.findByUsername(username).orElseThrow();
+        // 🔐 LOST ITEM → LOGIN REQUIRED
+        if (lost && auth == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Login required to post lost item");
+        }
 
-        ItemPost it = new ItemPost();
-        it.setTitle(title);
-        it.setDescription(description);
-        it.setLocation(location);
-        if (dateEvent != null && !dateEvent.isBlank())
-            it.setDateEvent(LocalDate.parse(dateEvent));
-        it.setCategory(category);
-        it.setLost(lost);
+        User reporter = null;
+        if (auth != null) {
+            reporter = userRepo.findByUsername(auth.getName()).orElseThrow();
+        }
+
+        ItemPost item = new ItemPost();
+        item.setTitle(title);
+        item.setDescription(description);
+        item.setLocation(location);
+        item.setMobile(mobile);
+        item.setCategory(category);
+        item.setLost(lost);
+        item.setDateEvent(LocalDate.parse(dateEvent));
+        item.setReportedBy(reporter);
+
         if (photo != null && !photo.isEmpty())
-            it.setPhoto(photo.getBytes());
-        it.setStatus("UNVERIFIED");
-        it.setReportedBy(user);
+            item.setPhoto(photo.getBytes());
 
-        itemRepo.save(it);
-        return ResponseEntity.ok(it);
+        item.setStatus(lost ? "UNVERIFIED" : "VERIFIED");
+
+        return ResponseEntity.ok(itemRepo.save(item));
     }
 }

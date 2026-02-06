@@ -10,7 +10,9 @@ import java.time.Instant;
 @Table(name = "item_posts")
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class ItemPost {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
@@ -20,19 +22,24 @@ public class ItemPost {
 
     private String location;
 
-    private LocalDate dateEvent; // date lost or found
+    private String mobile;  
+
+    private LocalDate dateEvent;
 
     private String category;
 
-    private boolean lost; // true if lost, false if found
+    private boolean lost;
 
     @Lob
-    private byte[] photo; // optional
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] photo;
 
-    private String status; // UNVERIFIED, VERIFIED, RETURNED, REMOVED
+    @Builder.Default
+    private String status = "UNVERIFIED";     // default status
 
     @ManyToOne
     private User reportedBy;
 
-    private Instant createdAt = Instant.now();
+    @Builder.Default
+    private Instant createdAt = Instant.now();  // default timestamp
 }

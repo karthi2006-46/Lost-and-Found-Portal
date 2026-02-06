@@ -26,5 +26,7 @@ public class User {
     @Column(nullable=false)
     private String role; // "USER" or "ADMIN"
 
-    private Instant createdAt = Instant.now();
+    @Builder.Default
+private Instant createdAt = Instant.now();
+
 }
