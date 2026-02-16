@@ -46,10 +46,14 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
             .requestMatchers("/api/items/**", "/api/auth/**").permitAll()
 
             // 🔐 ADMIN APIs ONLY
-            .requestMatchers("/api/claims/pending", "/api/claims/*/resolve")
-            .hasAuthority("ADMIN")
+            .requestMatchers("/api/claims/pending",
+                 "/api/claims/*/resolve",
+                 "/api/claims/proof/**")
+.hasRole("ADMIN")
+            
 
             // 🔐 ALL OTHER APIs NEED LOGIN
+
             .anyRequest().authenticated()
         )
         .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

@@ -1,10 +1,12 @@
 package com.example.lostfound.security;
 
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,49 +21,38 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         this.jwtUtil = jwtUtil;
     }
 
-   @Override
-protected void doFilterInternal(HttpServletRequest req,
-                                HttpServletResponse res,
-                                FilterChain chain)
-        throws ServletException, IOException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
 
-    String path = req.getRequestURI();
+        String header = request.getHeader("Authorization");
 
-    // ✅ COMPLETELY PUBLIC ENDPOINTS
-    if (
-        path.equals("/") ||
-        path.startsWith("/api/items") ||
-        path.startsWith("/api/auth") ||
-        path.endsWith(".html") ||
-        path.startsWith("/static") ||
-        path.startsWith("/api/items/photo")
-    ) {
-        chain.doFilter(req, res);
-        return;
-    }
+        if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
 
-    String header = req.getHeader("Authorization");
-
-    if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
-        try {
             String token = header.substring(7);
-            String username = jwtUtil.getUsername(token);
-            String role = jwtUtil.getRole(token);
 
-            UsernamePasswordAuthenticationToken auth =
-                new UsernamePasswordAuthenticationToken(
-                    username,
-                    null,
-                    List.of(new SimpleGrantedAuthority(role))
-                );
+            if (jwtUtil.validateToken(token)) {
 
-            SecurityContextHolder.getContext().setAuthentication(auth);
+                String username = jwtUtil.getUsername(token);
+                String role = jwtUtil.getRole(token);
 
-        } catch (Exception e) {
-            SecurityContextHolder.clearContext();
+                // 🔥 ADD ROLE_ PREFIX
+               SimpleGrantedAuthority authority =
+        new SimpleGrantedAuthority("ROLE_" + role);
+
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(
+                                username,
+                                null,
+                                List.of(authority)
+                        );
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
-    }
 
-    chain.doFilter(req, res);
-}
+        filterChain.doFilter(request, response);
+    }
 }
