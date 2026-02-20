@@ -1,0 +1,87 @@
+/* ===== BODY ===== */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f7fb;
+    min-height: 100vh;
+}
+
+/* ===== NAVBAR ===== */
+.custom-navbar {
+    background: linear-gradient(90deg, #0d6efd, #0a58ca);
+    padding: 8px 0;
+}
+
+.custom-navbar .navbar-brand {
+    color: white;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.container {
+    margin-top: 50px;
+}
+
+/* ===== CARD DESIGN ===== */
+.card {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.08);
+    padding: 40px;
+}
+
+/* ===== TITLE ===== */
+.card h4 {
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #333;
+}
+
+/* ===== INPUTS ===== */
+.form-control {
+    height: 55px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    font-size: 15px;
+}
+
+textarea.form-control {
+    height: 100px;
+    resize: none;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+}
+
+/* ===== SELECT ===== */
+select.form-control {
+    height: 55px;
+}
+
+/* ===== FILE INPUT ===== */
+input[type="file"] {
+    padding: 10px;
+}
+
+/* ===== SUBMIT BUTTON ===== */
+.btn-primary {
+    height: 55px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 16px;
+    background: linear-gradient(45deg, #0d6efd, #0a58ca);
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(13,110,253,0.3);
+}
+
+/* ===== ALERT ===== */
+.alert {
+    border-radius: 12px;
+}

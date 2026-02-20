@@ -1,0 +1,95 @@
+/* ===== BODY ===== */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa, #e4ecf7);
+    margin: 0;
+    height: 100vh;
+}
+
+/* ===== LOGIN NAVBAR ===== */
+.custom-navbar {
+    background: linear-gradient(90deg, #0d6efd, #0a58ca);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
+.custom-navbar .navbar-brand {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.custom-navbar .nav-link {
+    color: #f1f1f1;
+    margin-left: 20px;
+}
+
+.custom-navbar .nav-link:hover {
+    color: #ffd43b;
+}
+
+/* ===== MAIN SECTION ===== */
+.main-section {
+    height: 90vh;
+}
+
+/* ===== LOGIN CARD ===== */
+.login-card {
+    width: 500px;               /* bigger */
+    padding: 50px;              /* more space */
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+    color: #333;
+}
+
+/* ===== TITLE ===== */
+.login-card h4 {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* ===== INPUT ===== */
+.form-control {
+    height: 60px;
+    font-size: 16px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13,110,253,.15);
+}
+
+/* ===== INPUT ICON ===== */
+.input-group-text {
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+}
+
+/* ===== BUTTON ===== */
+.btn-primary {
+    height: 55px;
+    font-size: 16px;
+    border-radius: 30px;
+    font-weight: 600;
+    background: linear-gradient(45deg, #0d6efd, #0a58ca);
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(13,110,253,.3);
+}
+
+/* ===== CREATE ACCOUNT LINK ===== */
+.create-link {
+    font-size: 15px;
+    font-weight: 500;
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.create-link:hover {
+    text-decoration: underline;
+}

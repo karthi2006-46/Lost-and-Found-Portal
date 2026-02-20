@@ -39,7 +39,9 @@ public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
                 "/item.html", "/post.html",
                 "/my-claims.html",
                 "/admin-claims.html",   // ✅ ALLOW HTML
-                "/static/**"
+                "/static/**",
+                 "/css/**",
+                 "/js/**"
             ).permitAll()
 
             // ✅ PUBLIC APIs

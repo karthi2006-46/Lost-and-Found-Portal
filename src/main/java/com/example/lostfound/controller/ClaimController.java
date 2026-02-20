@@ -1,5 +1,6 @@
 package com.example.lostfound.controller;
-
+import java.io.ByteArrayInputStream;
+import java.net.URLConnection;
 import com.example.lostfound.model.*;
 import com.example.lostfound.repository.*;
 import org.springframework.http.*;
@@ -133,33 +134,46 @@ public class ClaimController {
     // =====================================================
     // ADMIN VIEW GOV PROOF IMAGE
     // =====================================================
-    @PreAuthorize("hasRole('ADMIN')")
+ @PreAuthorize("hasRole('ADMIN')")
 @GetMapping("/proof/gov/{id}")
-public ResponseEntity<byte[]> viewGovProof(@PathVariable Long id) {
+public ResponseEntity<byte[]> viewGovProof(@PathVariable Long id) throws Exception {
 
     Claim claim = claimRepo.findById(id).orElseThrow();
+    byte[] image = claim.getGovProofImage();
+
+    // 🔥 Automatically detect image type (jpg/png)
+    String mimeType = URLConnection.guessContentTypeFromStream(
+            new ByteArrayInputStream(image));
+
+    if (mimeType == null) {
+        mimeType = "image/jpeg"; // fallback
+    }
 
     return ResponseEntity.ok()
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .header(HttpHeaders.CONTENT_DISPOSITION,
-                    "inline; filename=gov-proof.jpg")
-            .body(claim.getGovProofImage());
+            .contentType(MediaType.parseMediaType(mimeType))
+            .body(image);
 }
 
-    // =====================================================
-    // ADMIN VIEW PRODUCT PROOF IMAGE
-    // =====================================================
-    @PreAuthorize("hasRole('ADMIN')")
+//     =====================================================
+//     ADMIN VIEW PRODUCT PROOF IMAGE
+//     =====================================================
+@PreAuthorize("hasRole('ADMIN')")
 @GetMapping("/proof/product/{id}")
-public ResponseEntity<byte[]> viewProductProof(@PathVariable Long id) {
+public ResponseEntity<byte[]> viewProductProof(@PathVariable Long id) throws Exception {
 
     Claim claim = claimRepo.findById(id).orElseThrow();
+    byte[] image = claim.getProductProofImage();
+
+    String mimeType = URLConnection.guessContentTypeFromStream(
+            new ByteArrayInputStream(image));
+
+    if (mimeType == null) {
+        mimeType = "image/jpeg";
+    }
 
     return ResponseEntity.ok()
-            .contentType(MediaType.APPLICATION_OCTET_STREAM)
-            .header(HttpHeaders.CONTENT_DISPOSITION,
-                    "inline; filename=product-proof.jpg")
-            .body(claim.getProductProofImage());
+            .contentType(MediaType.parseMediaType(mimeType))
+            .body(image);
 }
 
     // =====================================================

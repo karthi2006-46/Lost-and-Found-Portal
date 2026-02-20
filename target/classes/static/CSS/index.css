@@ -1,0 +1,117 @@
+/* ===== BODY ===== */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f5f7fa;
+    margin: 0;
+    min-height: 100vh;
+    color: #333;
+}
+
+/* ===== SMALL BLUE NAVBAR ===== */
+.custom-navbar {
+    background: linear-gradient(90deg, #0d6efd, #0a58ca);
+    padding: 2px;              /* 👈 reduced from 14px */
+    box-shadow: 0 3px 10px rgba(13,110,253,0.25);
+}
+
+/* Brand smaller */
+.custom-navbar .navbar-brand {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 20px;             /* 👈 reduced */
+}
+
+/* Nav links smaller */
+.custom-navbar .nav-link {
+    color: rgba(255,255,255,0.9);
+    font-weight: 500;
+    margin-left: 15px;
+    font-size: 20px;             /* 👈 smaller text */
+}
+
+.custom-navbar .nav-link:hover {
+    color: #ffd43b;
+}
+.navbar .btn {
+    padding: 4px 12px;     /* smaller button height */
+    font-size: 13px;
+    border-radius: 20px;
+}
+
+/* ===== MAIN CONTAINER ===== */
+.container {
+    margin-top: 50px;
+}
+
+/* ===== TOP ACTION BUTTONS ===== */
+.btn-success {
+    background: linear-gradient(45deg, #198754, #157347);
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    height: 50px;
+}
+
+.btn-danger {
+    background: linear-gradient(45deg, #dc3545, #bb2d3b);
+    border: none;
+    border-radius: 30px;
+    font-weight: 600;
+    height: 50px;
+}
+
+/* ===== CARD DESIGN ===== */
+.card {
+    border: none;
+    border-radius: 18px;
+    background: #ffffff;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    transition: 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+}
+
+.card-body h5 {
+    font-weight: 600;
+    color: #222;
+}
+
+/* ===== IMAGE ===== */
+.card img {
+    width: 100%;
+    height: 240px;
+    object-fit: contain;
+    background: #f8f9fa;
+    padding: 10px;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+}
+
+/* ===== STATUS BADGES ===== */
+.bg-danger {
+    background: #dc3545 !important;
+}
+
+.bg-success {
+    background: #198754 !important;
+}
+
+/* ===== VIEW BUTTON ===== */
+.btn-outline-primary {
+    border-radius: 25px;
+    font-weight: 500;
+}
+
+/* ===== CLAIM BUTTON ===== */
+.btn-warning {
+    border-radius: 25px;
+    font-weight: 600;
+}
+
+/* ===== SMALL TEXT ===== */
+.text-muted {
+    color: #6c757d !important;
+}

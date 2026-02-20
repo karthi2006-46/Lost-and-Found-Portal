@@ -1,14 +1,54 @@
-  <!DOCTYPE html>
-  <html>
-  <head>
-    <title>Lost & Found Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  </head>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lost & Found Portal</title>
 
-  <body class="d-flex justify-content-center align-items-center vh-100 bg-light">
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-  <div class="card shadow-lg p-4" style="width:380px;border-radius:15px">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="/css/login.css">
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar navbar-expand-lg custom-navbar">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="#">
+      <i class="fa-solid fa-magnifying-glass-location"></i> Lost & Found
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="">Report Item</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">View Items</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">Contact</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= LOGIN SECTION ================= -->
+<div class="main-section d-flex justify-content-center align-items-center">
+
+  <div class="card login-card shadow-lg p-4">
 
     <div class="text-center mb-3">
       <h4 class="fw-bold">Lost & Found Portal</h4>
@@ -29,9 +69,11 @@
 
       <button class="btn btn-primary w-100 mb-2">Login</button>
 
-      <div class="text-center">
-        <small><a href="#" onclick="showRegister()">Create New Account</a></small>
-      </div>
+      <div class="text-center mt-3">
+  <a href="#" onclick="showRegister()" class="create-link">
+    Create New Account
+  </a>
+</div>
     </form>
 
     <!-- REGISTER FORM -->
@@ -48,53 +90,94 @@
 
   </div>
 
-  <script>
-  function showRegister(){
-    loginForm.style.display="none";
-    registerForm.style.display="block";
-  }
+</div>
 
-  function showLogin(){
-    registerForm.style.display="none";
-    loginForm.style.display="block";
-  }
+<script>
 
-  // LOGIN
-  loginForm.onsubmit = async (e)=>{
-    e.preventDefault();
-    let res = await fetch("/api/auth/login",{
+/* =====================
+   FORM SWITCH
+===================== */
+function showRegister(){
+  document.getElementById("loginForm").style.display="none";
+  document.getElementById("registerForm").style.display="block";
+}
+
+function showLogin(){
+  document.getElementById("registerForm").style.display="none";
+  document.getElementById("loginForm").style.display="block";
+}
+
+/* =====================
+   LOGIN API
+===================== */
+document.getElementById("loginForm").addEventListener("submit", async (e)=>{
+  e.preventDefault();
+
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+
+  try {
+    const res = await fetch("/api/auth/login",{
       method:"POST",
       headers:{ "Content-Type":"application/json"},
-      body: JSON.stringify({
-        username:username.value,
-        password:password.value
-      })
+      body: JSON.stringify({ username, password })
     });
-    if(!res.ok){ alert("Invalid credentials"); return; }
-    let data = await res.json();
-  localStorage.setItem("token", data.token);
-  localStorage.setItem("role", data.role);
-  localStorage.setItem("username", data.username);   // 👈 ADD THIS
 
-    window.location = data.role==="ADMIN" ? "/admin-claims.html" : "/";
+    if(!res.ok){
+      alert("Invalid Username or Password");
+      return;
+    }
+
+    const data = await res.json();
+
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("role", data.role);
+    localStorage.setItem("username", data.username);
+
+    // Redirect
+    if(data.role === "ADMIN"){
+      window.location = "/admin-claims.html";
+    } else {
+      window.location = "/";
+    }
+
+  } catch(err){
+    alert("Server error. Try again.");
   }
+});
 
-  // REGISTER
-  registerForm.onsubmit = async (e)=>{
+/* =====================
+   REGISTER API
+===================== */
+document.getElementById("registerForm").addEventListener("submit", async (e)=>{
   e.preventDefault();
-  let res = await fetch("/api/auth/register",{
-    method:"POST",
-    headers:{ "Content-Type":"application/json"},
-    body: JSON.stringify({
-    fullName:rname.value,
-    username:rusername.value,
-    email:remail.value,
-    password:rpassword.value
-    })
-  });
-  if(res.ok){ alert("Account created! Login now"); showLogin(); }
-  else{ alert("Username or email already exists"); }
+
+  const fullName = document.getElementById("rname").value;
+  const username = document.getElementById("rusername").value;
+  const email = document.getElementById("remail").value;
+  const password = document.getElementById("rpassword").value;
+
+  try {
+    const res = await fetch("/api/auth/register",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json"},
+      body: JSON.stringify({ fullName, username, email, password })
+    });
+
+    if(res.ok){
+      alert("Account Created Successfully! Please Login.");
+      showLogin();
+    } else {
+      const text = await res.text();
+      alert(text || "Registration Failed");
+    }
+
+  } catch(err){
+    alert("Server error. Try again.");
   }
-  </script>
-  </body>
-  </html>
+});
+
+</script>
+
+</body>
+</html>
