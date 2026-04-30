@@ -21,10 +21,8 @@ jobs:
             git pull origin main
             /usr/bin/mvn clean package -DskipTests
 
-            echo "Stopping old app..."
-            pkill -f 'java -jar' || true
-            sleep 3
+            echo "Restarting app..."
+            sudo systemctl restart lostfound
 
-            echo "Starting new app..."
-            nohup java -jar target/*.jar > app.log 2>&1 &
-            disown
+            echo "Status check..."
+            sudo systemctl status lostfound
