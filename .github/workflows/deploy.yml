@@ -13,18 +13,18 @@ jobs:
       - name: SSH and Deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: 16.170.183.80   # your EC2 IP
+          host: 16.170.183.80
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
-script: |
-  cd ~/Lost-and-Found-Portal
-  git pull origin main
-  /usr/bin/mvn clean package -DskipTests
+          script: |
+            cd ~/Lost-and-Found-Portal
+            git pull origin main
+            /usr/bin/mvn clean package -DskipTests
 
-  echo "Stopping old app..."
-  pkill -f 'java -jar' || true
-  sleep 3
+            echo "Stopping old app..."
+            pkill -f 'java -jar' || true
+            sleep 3
 
-  echo "Starting new app..."
-  nohup java -jar target/*.jar > app.log 2>&1 &
-  disown
+            echo "Starting new app..."
+            nohup java -jar target/*.jar > app.log 2>&1 &
+            disown
