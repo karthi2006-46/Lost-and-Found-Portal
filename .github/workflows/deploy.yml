@@ -16,9 +16,15 @@ jobs:
           host: 16.170.183.80   # your EC2 IP
           username: ubuntu
           key: ${{ secrets.EC2_KEY }}
-          script: |
-            cd Lost-and-Found-Portal
-            git pull origin main
-            mvn clean package -DskipTests
-            pkill -f 'java -jar'
-            nohup java -jar target/*.jar > app.log 2>&1 &
+script: |
+  cd ~/Lost-and-Found-Portal
+  git pull origin main
+  /usr/bin/mvn clean package -DskipTests
+
+  echo "Stopping old app..."
+  pkill -f 'java -jar' || true
+  sleep 3
+
+  echo "Starting new app..."
+  nohup java -jar target/*.jar > app.log 2>&1 &
+  disown
