@@ -1,4 +1,4 @@
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=180&section=header&text=Lost+and+Found+Portal&fontSize=42&fontColor=fff&animation=twinkling&fontAlignY=32&desc=Full-Stack+Campus+Lost+%26+Found+Management+System&descAlignY=62&descSize=16"/>
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=180&section=header&text=Lost+and+Found+Portal&fontSize=42&fontColor=fff&animation=twinkling&fontAlignY=32&desc=Full-Stack+Campus+Lost+and+Found+Management+System&descAlignY=62&descSize=16"/>
 
 <div align="center">
   <img src="https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white"/>
@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black"/>
   <br/><br/>
   <a href="https://lostfoundportal.in">
-    <img src="https://img.shields.io/badge/🌐%20Live%20Demo-lostfoundportal.in-38BDAE?style=for-the-badge"/>
+    <img src="https://img.shields.io/badge/Live%20Demo-lostfoundportal.in-38BDAE?style=for-the-badge&logo=googlechrome&logoColor=white"/>
   </a>
   &nbsp;
   <a href="https://github.com/karthi2006-46/lost-and-found">
@@ -19,24 +19,24 @@
 
 ---
 
-## 📖 About The Project
+## About The Project
 
-The **Lost & Found Portal** is a full-stack web application built to digitize and streamline the process of reporting, searching, and claiming lost items within a college campus. Instead of relying on notice boards or word-of-mouth, students and staff can log in, post lost/found items with details and images, and search the database to recover their belongings.
-
----
-
-## ✨ Features
-
-- 📋 **Report Lost / Found Items** — Submit item details with description and location
-- 🔍 **Search & Filter** — Browse reported items by category, date, or keyword
-- 🔐 **User Authentication** — Secure login and registration for students/staff
-- 📬 **Claim Requests** — Users can raise a claim on found items
-- 🗄️ **Admin Dashboard** — Manage all listings, users, and claim statuses
-- 📱 **Responsive Design** — Works seamlessly on desktop and mobile
+The **Lost and Found Portal** is a full-stack web application built to digitize and streamline the process of reporting, searching, and claiming lost items within a college campus. Instead of relying on notice boards or word-of-mouth, students and staff can log in, post lost/found items with details and images, and search the database to recover their belongings.
 
 ---
 
-## 🛠️ Tech Stack
+## Features
+
+- **Report Lost / Found Items** — Submit item details with description and location
+- **Search and Filter** — Browse reported items by category, date, or keyword
+- **User Authentication** — Secure login and registration for students/staff
+- **Claim Requests** — Users can raise a claim on found items
+- **Admin Dashboard** — Manage all listings, users, and claim statuses
+- **Responsive Design** — Works seamlessly on desktop and mobile
+
+---
+
+## Tech Stack
 
 | Layer | Technology |
 |-------|------------|
@@ -48,7 +48,7 @@ The **Lost & Found Portal** is a full-stack web application built to digitize an
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -81,7 +81,7 @@ mvn spring-boot:run
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 lost-and-found/
@@ -101,18 +101,18 @@ lost-and-found/
 
 ---
 
-## 🌐 Live Demo
+## Live Demo
 
-> 🔗 **[lostfoundportal.in](https://lostfoundportal.in)**
+> **[lostfoundportal.in](https://lostfoundportal.in)**
 
 ---
 
-## 👨‍💻 Author
+## Author
 
 <div align="center">
   <strong>Karthikeyan R R</strong><br/>
-  BCA Student · Full-Stack Java Developer<br/>
-  Dr. M.G.R. Educational & Research Institute, Chennai<br/><br/>
+  BCA Student &middot; Full-Stack Java Developer<br/>
+  Dr. M.G.R. Educational and Research Institute, Chennai<br/><br/>
   <a href="mailto:rr.karthikeyan2006@gmail.com">
     <img src="https://img.shields.io/badge/Gmail-rr.karthikeyan2006%40gmail.com-D14836?style=flat-square&logo=gmail&logoColor=white"/>
   </a>
