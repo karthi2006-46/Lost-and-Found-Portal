@@ -1,4 +1,4 @@
-<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=180&section=header&text=Lost%20%26%20Found%20Portal&fontSize=42&fontColor=fff&animation=twinkling&fontAlignY=32&desc=A%20Full-Stack%20Campus%20Lost%20%26%20Found%20Management%20System&descAlignY=62&descSize=16"/>
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=180&section=header&text=Lost+and+Found+Portal&fontSize=42&fontColor=fff&animation=twinkling&fontAlignY=32&desc=Full-Stack+Campus+Lost+%26+Found+Management+System&descAlignY=62&descSize=16"/>
 
 <div align="center">
   <img src="https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white"/>
